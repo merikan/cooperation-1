@@ -78,7 +78,7 @@ jsonBuilder{
         }
 
         tjanstekonsument db.rows(
-                '''select tk.id, tk.beskrivning, tk.hsaId from Tjanstekomponent tk, Anropsbehorighet a
+                '''select distinct (tk.id), tk.beskrivning, tk.hsaId from Tjanstekomponent tk, Anropsbehorighet a
                    where tk.id = a.tjanstekonsument_id;''').collect{ row ->
             ["id": row.id,
              "beskrivning": row.beskrivning,
@@ -86,7 +86,7 @@ jsonBuilder{
         }
 
         tjansteproducent db.rows(
-                '''select tk.id, tk.beskrivning, tk.hsaId from Tjanstekomponent tk, AnropsAdress a
+                '''select distinct (tk.id), tk.beskrivning, tk.hsaId from Tjanstekomponent tk, AnropsAdress a
                 where tk.id = a.tjanstekomponent_id''').collect{ row ->
             ["id": row.id,
              "beskrivning": row.beskrivning,

@@ -1,7 +1,7 @@
 {
     "beskrivning": "TAK versionerat format",
     "formatVersion": "1",
-    "tidpunkt": "2015-08-06T13:12:24Z",
+    "tidpunkt": "2015-08-10T11:55:23Z",
     "data": {
         "anropsadress": [
             {
@@ -306,54 +306,9 @@
                 "hsaId": "client"
             },
             {
-                "id": 4,
-                "beskrivning": "tp test client",
-                "hsaId": "client"
-            },
-            {
-                "id": 4,
-                "beskrivning": "tp test client",
-                "hsaId": "client"
-            },
-            {
-                "id": 4,
-                "beskrivning": "tp test client",
-                "hsaId": "client"
-            },
-            {
-                "id": 4,
-                "beskrivning": "tp test client",
-                "hsaId": "client"
-            },
-            {
-                "id": 4,
-                "beskrivning": "tp test client",
-                "hsaId": "client"
-            },
-            {
-                "id": 4,
-                "beskrivning": "tp test client",
-                "hsaId": "client"
-            },
-            {
-                "id": 4,
-                "beskrivning": "tp test client",
-                "hsaId": "client"
-            },
-            {
-                "id": 4,
-                "beskrivning": "tp test client",
-                "hsaId": "client"
-            },
-            {
                 "id": 10,
                 "beskrivning": "Inera som konsument, t ex en aggregerande tj\u00e4nst",
                 "hsaId": "NTjP"
-            },
-            {
-                "id": 12,
-                "beskrivning": "NTjP EI som konsument, borde kunna vara NTjP men \u00e4r i EI v1.0 h\u00e5rt koplat till owner identiteten som \u00e4r Inera's org nr...",
-                "hsaId": "5565594230"
             },
             {
                 "id": 12,

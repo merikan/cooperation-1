@@ -22,7 +22,7 @@ def username = 'sa', password = ''
 def db = Sql.newInstance("jdbc:h2:tcp://localhost/~/test;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE", username, password, 'org.hsqldb.jdbcDriver')
 
 //JSON file from TAK to import
-def inputFile = new File("./tak_cooperation_export_sample_qa.json")
+def inputFile = new File("./tak_cooperation_export_sample_ntjp_qa.json")
 def inputJSON = new JsonSlurper().parseText(inputFile.text)
 
 def countRows = { description, table ->
