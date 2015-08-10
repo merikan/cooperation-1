@@ -12,19 +12,23 @@ import groovy.sql.Sql
  * 4, Run this groovy script by $groovy TakCooperationImport.groovy
  */
 
- @GrabConfig(systemClassLoader=true)
- @Grab(group='com.h2database', module='h2', version='1.4.187')
- @Grab(group='org.hsqldb', module='hsqldb', version='2.3.3')
- @Grab(group='mysql', module='mysql-connector-java', version='5.1.36')
-
+@GrabConfig(systemClassLoader=true)
+@Grab(group='com.h2database', module='h2', version='1.4.187')
+@Grab(group='org.hsqldb', module='hsqldb', version='2.3.3')
+@Grab(group='mysql', module='mysql-connector-java', version='5.1.36')
 
 //Cooperation db settings
 def username = 'sa', password = ''
 def db = Sql.newInstance("jdbc:h2:tcp://localhost/~/test;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE", username, password, 'org.hsqldb.jdbcDriver')
 
 //JSON file from TAK to import
-def inputFile = new File("./tak_cooperation_export.json")
+def inputFile = new File("./tak_cooperation_export_sample_qa.json")
 def inputJSON = new JsonSlurper().parseText(inputFile.text)
+
+def countRows = { description, table ->
+	def result = db.firstRow("SELECT COUNT(*) AS numberOfRows FROM " + table)
+	println "$table, $description, rows: $result.numberOfRows"
+}
 
 /* START IMPORT */
 
@@ -35,12 +39,6 @@ println "Format version: $inputJSON.formatVersion"
 println "Description: $inputJSON.beskrivning"
 println "Timestamp of exported TAK data: $inputJSON.tidpunkt"
 println '************************************************************'
-
-def countRows = { description, table ->
-    def result = db.firstRow("SELECT COUNT(*) AS numberOfRows FROM " + table)
-    println "$table, $description, rows: $result.numberOfRows"
-}
-
 
 //CONNECTION POINT
 def platform = "NTjP"
@@ -124,13 +122,6 @@ inputJSON.data.anropsbehorighet.each{
 }
 
 //SERVICEPRODUCTION
-
-//FIXME: NOT WORKING, DOES NOT IMPORT ANY SERVICEPRODUCTION
-
-println '*********'
-println 'FIXME: DOES NOT IMPORT ANY SERVICEPRODUCTION!!'
-println '*********'
-
 inputJSON.data.vagval.each{
 
     if(db.firstRow(
@@ -139,23 +130,25 @@ inputJSON.data.vagval.each{
                 AND c.service_producer_id = s.id \
                 AND c.service_contract_id = sc.id \
                 AND c.connection_point_id = cp.id \
-                AND l.logical_address = $it.relationships.logiskAdress \
-                AND s.hsa_id = $it.relationships.tjanstekonsument \
+                AND l.logical_address = $it.relationships.logiskadress \
+                AND s.hsa_id = $it.relationships.tjansteproducent \
                 AND sc.namespace = $it.relationships.tjanstekontrakt \
                 AND cp.environment = $environment \
                 AND cp.platform = $platform") == null){
 
         db.executeInsert \
                 "insert into serviceproduction(physical_address, rivta_profile, connection_point_id, logical_address_id, service_producer_id, service_contract_id) \
-                    select $it.relationships.anropsadress, $it.relationships.rivtaProfil, c.id, address.id, consumer.id, contract.id \
+                    select $it.relationships.anropsadress, $it.relationships.rivtaProfil, c.id, address.id, producer.id, contract.id \
                     from \
                         (SELECT id FROM connectionpoint WHERE platform = $platform AND environment = $environment) as c, \
-                        (SELECT id FROM logicaladdress WHERE logical_address = $it.relationships.logiskAdress) as address, \
-                        (SELECT id FROM serviceconsumer WHERE hsa_id = $it.relationships.tjanstekonsument) as consumer,\
+                        (SELECT id FROM logicaladdress WHERE logical_address = $it.relationships.logiskadress) as address, \
+                        (SELECT id FROM serviceproducer WHERE hsa_id = $it.relationships.tjansteproducent) as producer,\
                         (SELECT id FROM servicecontract WHERE namespace = $it.relationships.tjanstekontrakt) as contract"
     }else{
         println "INFO: Serviceproduction already exist $it"
     }
 }
+
+db.close();
 
 println 'Done! Imported tak data to cooperation database'
