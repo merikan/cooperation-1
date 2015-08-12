@@ -8,7 +8,7 @@ import groovy.sql.Sql
  * 1, Start your local H2 database and make sure cooperation database and tables exist
  * 2, Make sure you have exported data from TAK using TakCooperationExport.groovy
  * 3, Update the database config in this script
- * 4, Run this groovy script by $groovy TakCooperationImport.groovy
+ * 4, Run this groovy script by $groovy TakCooperationImport.groovy > importLog.txt
  */
 
 @GrabConfig(systemClassLoader=true)
@@ -146,8 +146,8 @@ currentDir.eachFileMatch(FileType.FILES, ~/.*json/) {
 
 	//Extract env and platform from file name with convention takdump_platform_environment.json
 	def fileName = it.name.replaceFirst(~/\.[^\.]+$/, '')
-	def platform = fileName.split('_')[1]
-	def environment = fileName.split('_')[2]
+	def platform = fileName.split('_')[1].toUpperCase()
+	def environment = fileName.split('_')[2].toUpperCase()
 
 	def inputJSON = new JsonSlurper().parseText(it.text)
 

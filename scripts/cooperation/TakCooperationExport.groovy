@@ -8,6 +8,8 @@ package cooperation
  * SSH to NTjP environments:
  * https://callistaenterprise.atlassian.net/wiki/display/Supportwiki/Databasuppkoppling+och+SQL
  *
+ * 1, Run this groovy script by $groovy TakCooperationExport.groovy > exportLog.txt
+ *
  */
 
  @GrabConfig(systemClassLoader=true)
@@ -17,7 +19,7 @@ package cooperation
 import groovy.sql.Sql
 import groovy.json.*
 
-def username = 'root', password = 'secret', database = 'tak', server = 'localhost'
+def username = 'hans', password = 'pb3MiIE7', database = 'takv2', server = 'localhost'
 
 def db = Sql.newInstance("jdbc:mysql://$server/$database", username, password, 'com.mysql.jdbc.Driver')
 
@@ -125,7 +127,8 @@ jsonBuilder{
 
 }
 
-new File('./tak_cooperation_export.json').write(JsonOutput.prettyPrint(jsonWriter.toString()))
-println 'Done, exported TAK data to tak_cooperation_export.json'
+new File('./takdump_PLATFORM_ENVIRONMENT.json').write(JsonOutput.prettyPrint(jsonWriter.toString()))
+println 'Done, exported TAK dump.'
+println 'NOTE! replace filename takdump_PLATFORM_ENVIRONMENT.json with correct platform and environemnt, e.g takdump_NTJP_TEST.json'
 //println jsonBuilder.prettyPrint();
 //println JsonOutput.prettyPrint(jsonWriter.toString())
