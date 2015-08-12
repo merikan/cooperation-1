@@ -136,10 +136,6 @@ println ''
 println 'START! Import all tak data to cooperation database'
 println ''
 
-//Environment and platform where TAK data was exported?
-def platform = "NTjP"
-def environment = 'qa'
-
 //Cooperation db settings
 def url = 'jdbc:h2:tcp://localhost/~/test;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE', username = 'sa', password = ''
 def db = Sql.newInstance(url, username, password, 'org.hsqldb.jdbcDriver')
@@ -147,6 +143,11 @@ def db = Sql.newInstance(url, username, password, 'org.hsqldb.jdbcDriver')
 //Import all json files in current directory
 def currentDir = new File('.')
 currentDir.eachFileMatch(FileType.FILES, ~/.*json/) {
+
+	//Extract env and platform from file name with convention takdump_platform_environment.json
+	def fileName = it.name.replaceFirst(~/\.[^\.]+$/, '')
+	def platform = fileName.split('_')[1]
+	def environment = fileName.split('_')[2]
 
 	def inputJSON = new JsonSlurper().parseText(it.text)
 
